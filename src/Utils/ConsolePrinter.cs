@@ -1,19 +1,19 @@
 namespace BusBoard {
     class ConsolePrinter {
-        public void PrintBusArrivals(IEnumerable<BusArrival> busArrivals) {
-            Console.WriteLine("===============================================");
+        public static void PrintBusArrivals(IEnumerable<BusArrival> busArrivals) {
+            Console.WriteLine("====================================================");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("{0,-10} {1,-30} {2,-10}", "Bus", "Destination", "Time");
+            Console.WriteLine("{0,-10} {1,-35} {2,-10}", "Bus", "Destination", "Time");
             Console.ResetColor();
-            Console.WriteLine("===============================================");
+            Console.WriteLine("====================================================");
             foreach (var bus in busArrivals)
             {
-                Console.WriteLine("{0, -10} {1, -30} {2, -10}", 
+                Console.WriteLine("{0, -10} {1, -35} {2, -10}", 
                     bus.lineId, 
                     bus.destinationName, 
                     TimeHelper.GetArrivalTimeInMinutes(bus.timeToStation));
             }
-            Console.WriteLine("===============================================");
+            Console.WriteLine("====================================================");
         }
     }
 }
