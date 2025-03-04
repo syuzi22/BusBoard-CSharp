@@ -17,8 +17,36 @@ namespace BusBoard {
         }
 
         public static void PrintBusStopInformation(string commonName, double distance) {
-            Console.WriteLine($"\nBus Stop: {commonName}");
+            Console.WriteLine($"Bus Stop: {commonName}");
             Console.WriteLine($"Distance: {Math.Round(distance)}m");
+        }
+
+        public static void PrintPostcodePrompt() {
+            Console.WriteLine("Please enter the postcode:");
+        }
+
+        public static void PrintValidPostcodePrompt() {
+            Console.WriteLine("Please provide valid UK postcode:");
+        }
+
+        public static void PrintNoBusStops() {
+            Console.WriteLine("Unfortunately, there are no bus stops near this postcode.\n");
+        }
+
+        public static void PrintNoBuses() {
+            Console.WriteLine("Unfortunately, there are no buses for this bus stop.\n");
+        }
+
+        public static void PrintNonExistentPostcode() {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("You've provided a non-existent postcode. Please check and try again.\n");
+            Console.ResetColor();
+        }
+
+        public static void PrintServiceUnavailable() {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Service is temporarily unavailable. Please try again later.");
+            Console.ResetColor();
         }
     }
 }

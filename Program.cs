@@ -1,30 +1,73 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Text.Json;
+
 namespace BusBoard
 {
-    class BusBoard {
-        public static async Task Main() {
-            while(true) {
-                string postCode = UserInput.GetPostcode();
-                IEnumerable<StopPoint> nearestStopPoints = await GetNearestStopPoints(postCode);
-
-                foreach (var stopPoint in nearestStopPoints)
+    class BusBoard
+    {
+        public static async Task Main()
+        {
+            try
+            {
+                while (true)
                 {
-                    IEnumerable<BusArrival> nextFiveBuses = await GetNextFiveBuses(stopPoint.naptanId);
-                    ConsolePrinter.PrintBusStopInformation(stopPoint.commonName, stopPoint.distance);
-                    ConsolePrinter.PrintBusArrivals(nextFiveBuses);
+                    string postcode = UserInput.GetPostcode();
+                    PostcodeInfo postcodeInfo;
+
+                    try
+                    {
+                        postcodeInfo = await PostcodeClient.GetPostcodeInfo(postcode);
+                    }
+                    catch (JsonException)
+                    {
+                        ConsolePrinter.PrintNonExistentPostcode();
+                        continue;
+                    }
+
+                    IEnumerable<StopPoint> nearestStopPoints = await GetNearestStopPoints(postcodeInfo.latitude, postcodeInfo.longitude);
+
+                    if (nearestStopPoints.Count() != 0)
+                    {
+                        await ProcessAndDisplayBusStopsAndArrivals(nearestStopPoints);
+                    }
+                    else
+                    {
+                        ConsolePrinter.PrintNoBusStops();
+                    }
                 }
-                
+            }
+            catch
+            {
+                ConsolePrinter.PrintServiceUnavailable();
+            }
+
+        }
+
+        private static async Task ProcessAndDisplayBusStopsAndArrivals(IEnumerable<StopPoint>nearestStopPoints) {
+            foreach (var stopPoint in nearestStopPoints)
+            {
+                ConsolePrinter.PrintBusStopInformation(stopPoint.commonName, stopPoint.distance);
+                IEnumerable<BusArrival> nextFiveBuses = await GetNextFiveBuses(stopPoint.naptanId);
+
+                if (nextFiveBuses.Count() == 0)
+                {
+                    ConsolePrinter.PrintNoBuses();
+                    continue;
+                }
+
+                ConsolePrinter.PrintBusArrivals(nextFiveBuses);
             }
         }
 
-        private static async Task<IEnumerable<StopPoint>> GetNearestStopPoints(string postCode) {
-            PostCodeInfo postCodeInfo = await PostCodeClient.GetPostCodeInfo(postCode);
-            List<StopPoint> stopPoints = await TflClient.GetStopPoints(postCodeInfo.latitude, postCodeInfo.longitude);
+        private static async Task<IEnumerable<StopPoint>> GetNearestStopPoints(double latitude, double longitude)
+        {
+            List<StopPoint> stopPoints = await TflClient.GetStopPoints(latitude, longitude);
 
             return stopPoints.Take(2);
         }
 
-        private static async Task<IEnumerable<BusArrival>> GetNextFiveBuses(string naptanId) {
+        private static async Task<IEnumerable<BusArrival>> GetNextFiveBuses(string naptanId)
+        {
             List<BusArrival> busArrivals = await TflClient.GetArrivalPredictionsForStopCode(naptanId);
             busArrivals.Sort((firstBus, secondBus) => firstBus.timeToStation.CompareTo(secondBus.timeToStation));
 

@@ -6,11 +6,11 @@ namespace BusBoard
     {
         public static string GetPostcode()
         {
-            Console.WriteLine("Please enter the postcode:");
+            ConsolePrinter.PrintPostcodePrompt();
             string? input = Console.ReadLine();
 
             while(input == null || !IsValidUKPostCode(input)) {
-                Console.WriteLine("Please provide valid UK postcode:");
+                ConsolePrinter.PrintValidPostcodePrompt();
                 input = Console.ReadLine();
             }
 

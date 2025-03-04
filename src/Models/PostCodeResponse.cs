@@ -1,9 +1,9 @@
 namespace BusBoard {
-    class PostCodeResponse {
-        public required PostCodeInfo result { get; set; }
+    class PostcodeResponse {
+        public required PostcodeInfo result { get; set; }
     }
 
-    public class PostCodeInfo {
+    public class PostcodeInfo {
         public required double longitude { get; set; }
         public required double latitude { get; set; }
     }
