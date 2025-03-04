@@ -11,29 +11,16 @@ namespace BusBoard
             {
                 while (true)
                 {
-                    string postcode = UserInput.GetPostcode();
-                    PostcodeInfo postcodeInfo;
+                    string postcode = await UserInput.GetPostcode();
+                    PostcodeInfo postcodeInfo = await PostcodeClient.GetPostcodeInfo(postcode);
+                    IEnumerable<StopPoint> nearestStopPoints = await GetNearestStopPoints(postcodeInfo.latitude, postcodeInfo.longitude);
 
-                    try
-                    {
-                        postcodeInfo = await PostcodeClient.GetPostcodeInfo(postcode);
-                    }
-                    catch (JsonException)
-                    {
-                        ConsolePrinter.PrintNonExistentPostcode();
+                    if (nearestStopPoints.Count() == 0) {
+                        ConsolePrinter.PrintNoBusStops();
                         continue;
                     }
 
-                    IEnumerable<StopPoint> nearestStopPoints = await GetNearestStopPoints(postcodeInfo.latitude, postcodeInfo.longitude);
-
-                    if (nearestStopPoints.Count() != 0)
-                    {
-                        await ProcessAndDisplayBusStopsAndArrivals(nearestStopPoints);
-                    }
-                    else
-                    {
-                        ConsolePrinter.PrintNoBusStops();
-                    }
+                    await ProcessAndDisplayBusStopsAndArrivals(nearestStopPoints);
                 }
             }
             catch

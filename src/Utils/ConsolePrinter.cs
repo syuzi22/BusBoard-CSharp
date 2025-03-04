@@ -26,7 +26,7 @@ namespace BusBoard {
         }
 
         public static void PrintValidPostcodePrompt() {
-            Console.WriteLine("Please provide valid UK postcode:");
+            Console.WriteLine("This postcode does not exist. Please provide valid UK postcode:");
         }
 
         public static void PrintNoBusStops() {
@@ -35,12 +35,6 @@ namespace BusBoard {
 
         public static void PrintNoBuses() {
             Console.WriteLine("Unfortunately, there are no buses for this bus stop.\n");
-        }
-
-        public static void PrintNonExistentPostcode() {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("You've provided a non-existent postcode. Please check and try again.\n");
-            Console.ResetColor();
         }
 
         public static void PrintServiceUnavailable() {
