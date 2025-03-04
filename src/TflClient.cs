@@ -11,7 +11,7 @@ namespace BusBoard {
             return response == null ? throw new Exception("Tfl API Error") : response;
         }
 
-        public static async Task<StopPointsResponse> GetStopPoints(double latitude, double longitude) {
+        public static async Task<List<StopPoint>> GetStopPoints(double latitude, double longitude) {
             var request = new RestRequest();
             request.AddQueryParameter("lat", latitude);
             request.AddQueryParameter("lon", longitude);
@@ -20,7 +20,7 @@ namespace BusBoard {
 
             var response = await stopPointClient.GetAsync<StopPointsResponse>(request);
             
-            return response == null ? throw new Exception("Tfl API Error") : response;
+            return response == null ? throw new Exception("Tfl API Error") : response.stopPoints;
         }
 
     }

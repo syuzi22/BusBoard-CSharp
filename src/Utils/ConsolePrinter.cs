@@ -15,5 +15,10 @@ namespace BusBoard {
             }
             Console.WriteLine("====================================================");
         }
+
+        public static void PrintBusStopInformation(string commonName, double distance) {
+            Console.WriteLine($"\nBus Stop: {commonName}");
+            Console.WriteLine($"Distance: {Math.Round(distance)}m");
+        }
     }
 }
